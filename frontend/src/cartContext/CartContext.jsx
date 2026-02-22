@@ -1,95 +1,19 @@
 // ===== Imports =====
 import { createContext, useContext, useEffect, useReducer } from "react";
+import { useAuth } from "../context/AuthContext";
 
 // ===== Context =====
 const CartContext = createContext();
 
-// ===== Load Initial State =====
-const loadInitialState = () => {
-  if (typeof window !== "undefined") {
-    const saved = localStorage.getItem("cart");
-    try {
-      const parsed = saved ? JSON.parse(saved) : null;
-      if (parsed && Array.isArray(parsed.items)) return parsed;
-      return { items: [] };
-    } catch {
-      return { items: [] };
-    }
-  }
-  return { items: [] };
-};
-
 // ===== Reducer =====
 const cartReducer = (state, action) => {
   switch (action.type) {
-    case "ADD_ITEM": {
-      const itemsToAdd = {
-        ...action.payload,
-        quantity: action.payload.quantity || 1,
-      };
-
-      const exists = state.items.find(
-        (i) =>
-          i.id === itemsToAdd.id &&
-          (i.source === itemsToAdd.source || (!i.source && !itemsToAdd.source))
-      );
-
-      if (exists) {
-        const updatedItems = state.items.map((i) =>
-          i.id === itemsToAdd.id &&
-          (i.source === itemsToAdd.source || (!i.source && !itemsToAdd.source))
-            ? { ...i, quantity: i.quantity + itemsToAdd.quantity }
-            : i
-        );
-
-        return { ...state, items: updatedItems };
-      } else {
-        return { ...state, items: [...state.items, itemsToAdd] };
-      }
+    case "SET_CART": {
+      return { ...state, items: action.payload || [] };
     }
-
-    case "INCREMENT": {
-      return {
-        ...state,
-        items: state.items.map((i) =>
-          i.id === action.payload.id &&
-          (i.source === action.payload.source ||
-            (!i.source && !action.payload.source))
-            ? { ...i, quantity: i.quantity + 1 }
-            : i
-        ),
-      };
+    case "CLEAR_CART": {
+      return { ...state, items: [] };
     }
-
-    case "DECREMENT": {
-      return {
-        ...state,
-        items: state.items
-          .map((i) =>
-            i.id === action.payload.id &&
-            (i.source === action.payload.source ||
-              (!i.source && !action.payload.source))
-              ? { ...i, quantity: i.quantity - 1 }
-              : i
-          )
-          .filter((i) => i.quantity > 0),
-      };
-    }
-
-    case "REMOVE_ITEM": {
-      return {
-        ...state,
-        items: state.items.filter(
-          (i) =>
-            !(
-              i.id === action.payload.id &&
-              (i.source === action.payload.source ||
-                (!i.source && !action.payload.source))
-            )
-        ),
-      };
-    }
-
     default:
       return state;
   }
@@ -97,14 +21,130 @@ const cartReducer = (state, action) => {
 
 // ===== Provider =====
 export const CartProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(cartReducer, {}, loadInitialState);
+  const [state, dispatch] = useReducer(cartReducer, { items: [] });
+  const { user, token } = useAuth();
+  const backendUrl = "http://localhost:4000/api/cart";
 
+  // Fetch cart from backend on login
   useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(state));
-  }, [state]);
+    const fetchCart = async () => {
+      if (user?._id) {
+        try {
+          const response = await fetch(`${backendUrl}/${user._id}`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+          });
+          const data = await response.json();
+          if (data.success) {
+            dispatch({ type: "SET_CART", payload: data.cart?.items || [] });
+          }
+        } catch (error) {
+          console.error("Error fetching cart:", error);
+        }
+      } else {
+        // Clear cart context if logged out
+        dispatch({ type: "CLEAR_CART" });
+      }
+    };
+    fetchCart();
+  }, [user, token]);
+
+  // Add to cart
+  const addToCart = async (bookId, quantity = 1) => {
+    if (!user) {
+      alert("Please login to add items to cart");
+      return;
+    }
+    try {
+      const response = await fetch(`${backendUrl}/add`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({ userId: user._id, bookId, quantity }),
+      });
+      const data = await response.json();
+      if (data.success) {
+        dispatch({ type: "SET_CART", payload: data.cart.items });
+        return true;
+      }
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+    }
+    return false;
+  };
+
+  // Remove from cart
+  const removeFromCart = async (bookId) => {
+    if (!user) return;
+    try {
+      const response = await fetch(`${backendUrl}/remove`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({ userId: user._id, bookId }),
+      });
+      const data = await response.json();
+      if (data.success) {
+        dispatch({ type: "SET_CART", payload: data.cart.items });
+      }
+    } catch (error) {
+      console.error("Error removing from cart:", error);
+    }
+  };
+
+  // Update quantity
+  const updateQuantity = async (bookId, quantity) => {
+    if (!user) return;
+    try {
+      const response = await fetch(`${backendUrl}/update`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({ userId: user._id, bookId, quantity }),
+      });
+      const data = await response.json();
+      if (data.success) {
+        dispatch({ type: "SET_CART", payload: data.cart.items });
+      }
+    } catch (error) {
+      console.error("Error updating quantity:", error);
+    }
+  };
+
+  // Clear cart
+  const clearCart = async () => {
+    if (!user) return;
+    try {
+      const response = await fetch(`${backendUrl}/clear`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({ userId: user._id }),
+      });
+      const data = await response.json();
+      if (data.success) {
+        dispatch({ type: "CLEAR_CART" });
+      }
+    } catch (error) {
+      console.error("Error clearing cart:", error);
+    }
+  };
 
   return (
-    <CartContext.Provider value={{ cart: state, dispatch }}>
+    <CartContext.Provider value={{
+      cart: state,
+      addToCart,
+      removeFromCart,
+      updateQuantity,
+      clearCart
+    }}>
       {children}
     </CartContext.Provider>
   );

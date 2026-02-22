@@ -1,77 +1,96 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { homeBooksStyles as styles } from "../assets/dummystyles";
 import { useCart } from "../cartContext/CartContext";
 import { Link } from "react-router-dom";
-import { hbbooks } from "../assets/dummydata";
 import {
   ArrowRight,
   Minus,
   PlusIcon,
   ShoppingCart,
   StarIcon,
+  Loader2,
 } from "lucide-react";
+
 const HomeBooks = () => {
-  const { cart, dispatch } = useCart();
+  const { cart, addToCart, updateQuantity } = useCart();
+  const [books, setBooks] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchBooks = async () => {
+    try {
+      const response = await fetch('http://localhost:4000/api/book');
+      const data = await response.json();
+      if (data.success) {
+        // Take first 4 for the home favorites section
+        setBooks(data.books.slice(0, 4));
+      }
+    } catch (error) {
+      console.error("Error fetching home books:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchBooks();
+  }, []);
+
   const inCart = (id) => {
-    return cart?.items?.find((item) => item.id === id);
+    return cart?.items?.find((item) => (item.bookId._id || item.bookId) === id);
   };
-  const handleAdd = (book) => {
-    dispatch({
-      type: "ADD_ITEM",
-      payload: { ...book, quantity: 1 },
-    });
-  };
-  const handleInc = (id) => {
-    dispatch({ type: "INCREMENT", payload: { id } });
-  };
-  const handleDec = (id) => {
-    dispatch({ type: "DECREMENT", payload: { id } });
-  };
+
+  if (loading) return (
+    <div className="py-20 flex justify-center">
+      <Loader2 className="animate-spin text-[#43C6AC]" size={40} />
+    </div>
+  );
+
   return (
     <div className={styles.section}>
       <div className={styles.container}>
         <div className={styles.card}>
           <div className="text-center mb-12">
-            <h2 className={styles.heading}>BookSeller Favorits</h2>
+            <h2 className={styles.heading}>BookSeller Favorites</h2>
             <div className={styles.headingLine} />
           </div>
           <div className={styles.grid}>
-            {hbbooks.map((book) => {
-              const item = inCart(book.id);
+            {books.map((book) => {
+              const item = inCart(book._id);
               return (
-                <div key={book.id} className={styles.bookCard}>
+                <div key={book._id} className={styles.bookCard}>
                   <div className={styles.imageWrapper}>
-                    <img src={book.image} className={styles.image} />
+                    <img src={`http://localhost:4000/uploads/${book.image}`} className={styles.image} alt={book.title} />
                     <div className={styles.rating}>
                       {[...Array(5)].map((_, i) => (
                         <StarIcon
                           key={i}
-                          className={`h-4 w-4 ${
-                            i < book.rating
-                              ? "text-[#43c6ac] fill-[#43c6ac]"
-                              : "text-gray-300"
-                          }`}
+                          className={`h-4 w-4 ${i < book.rating
+                            ? "text-[#43c6ac] fill-[#43c6ac]"
+                            : "text-gray-300"
+                            }`}
                         />
                       ))}
                     </div>
                   </div>
                   <h3 className={styles.title}>{book.title}</h3>
                   <p className={styles.author}>
-                    {book.author} best author in this week
+                    {book.author} — top selection
                   </p>
-                  <span className={styles.actualPrice}>₹{book.price}</span>
+                  <p className="text-lg font-bold text-[#43C6AC] mt-2 mb-4">${book.price.toFixed(2)}</p>
+
                   {item ? (
                     <div className={styles.qtyBox}>
                       <button
                         className={styles.qtyBtn}
-                        onClick={() => handleDec(book.id)}
+                        onClick={() => updateQuantity(book._id, item.quantity - 1)}
+                        disabled={item.quantity <= 1}
                       >
                         <Minus className="h-5 w-5" />
                       </button>
-                      <span className="text-gray-700">{item.quantity}</span>
+                      <span className="text-gray-700 font-semibold">{item.quantity}</span>
                       <button
                         className={styles.qtyBtn}
-                        onClick={() => handleInc(book.id)}
+                        onClick={() => updateQuantity(book._id, item.quantity + 1)}
                       >
                         <PlusIcon className="h-5 w-5" />
                       </button>
@@ -79,7 +98,7 @@ const HomeBooks = () => {
                   ) : (
                     <button
                       className={styles.addBtn}
-                      onClick={() => handleAdd(book)}
+                      onClick={() => addToCart(book._id, 1)}
                     >
                       <ShoppingCart className="h-5 w-5" />
                       <span> Add To Cart</span>

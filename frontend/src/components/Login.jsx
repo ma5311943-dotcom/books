@@ -1,41 +1,30 @@
 // ===== Imports =====
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { Mail, Lock, Eye, EyeOff, ArrowLeft, User } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { Mail, Lock, Eye, EyeOff, ArrowLeft, User, LayoutDashboard, LogOut } from "lucide-react";
+import { useAuth } from "../context/AuthContext";
 
 // ===== Component =====
 const Login = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
   const [toast, setToast] = useState({ visible: false, message: "", type: "" });
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { login, user, logout } = useAuth();
+  const navigate = useNavigate();
 
   // ===== Toast Effect =====
   useEffect(() => {
     let timer;
-    if (toast.visible && toast.type === "loading") {
-      timer = setTimeout(() => {
-        setToast({
-          visible: true,
-          message: "Login successful",
-          type: "success",
-        });
-        setIsSubmitting(true);
-        localStorage.setItem("authToken", "demoToken");
-      }, 1500);
-    }
-
-    if (toast.visible && toast.type === "success") {
+    if (toast.visible && toast.type !== "loading") {
       timer = setTimeout(() => {
         setToast({ visible: false, message: "", type: "" });
-      }, 1500);
+      }, 3000);
     }
-
     return () => clearTimeout(timer);
   }, [toast]);
 
   // ===== Handlers =====
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     if (!formData.email || !formData.password) {
       setToast({
@@ -58,137 +47,198 @@ const Login = () => {
     }
 
     setToast({ visible: true, message: "Logging in...", type: "loading" });
+
+    try {
+      const response = await fetch("http://localhost:4000/api/user/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        login(data.user, data.token);
+        setToast({
+          visible: true,
+          message: "Login successful",
+          type: "success",
+        });
+        setTimeout(() => {
+          if (data.user.role === 'admin') {
+            navigate("/admin/dashboard");
+          } else {
+            navigate("/");
+          }
+        }, 1500);
+      } else {
+        setToast({
+          visible: true,
+          message: data.message || "Login failed",
+          type: "error",
+        });
+      }
+    } catch (error) {
+      setToast({
+        visible: true,
+        message: "Server error. Please try again later.",
+        type: "error",
+      });
+    }
   };
 
-  const handleSignOut = () => {
-    setIsSubmitting(false);
-    setFormData({ email: "", password: "" });
-    localStorage.removeItem("authToken");
-  };
+  if (user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 p-6">
+        <div className="w-full max-w-sm bg-white rounded-3xl shadow-xl shadow-gray-200/50 p-8 text-center space-y-6 border border-gray-100">
+          <div className="mx-auto bg-[#43C6AC]/10 w-24 h-24 rounded-full flex items-center justify-center text-[#368F7A] shadow-inner">
+            <User size={48} />
+          </div>
+
+          <div>
+            <h2 className="text-2xl font-bold text-gray-900">
+              Welcome Back!
+            </h2>
+            <p className="text-gray-500 font-semibold uppercase text-[10px] tracking-widest mt-1">{user.username}</p>
+          </div>
+
+          <div className="space-y-3">
+            <Link
+              to="/"
+              className="w-full flex items-center justify-center gap-3 bg-gradient-to-r from-[#2B5876] to-[#43C6AC] text-white py-4 rounded-2xl font-bold uppercase tracking-widest text-xs shadow-lg shadow-emerald-100 hover:scale-[1.02] transition-all"
+            >
+              <User size={18} /> Continue Shopping
+            </Link>
+
+            {user.role === 'admin' && (
+              <Link
+                to="/admin/dashboard"
+                className="w-full flex items-center justify-center gap-3 bg-[#1A237E] text-white py-4 rounded-2xl font-bold uppercase tracking-widest text-xs shadow-lg shadow-indigo-100 hover:scale-[1.02] transition-all"
+              >
+                <LayoutDashboard size={18} /> Admin Dashboard
+              </Link>
+            )}
+
+            <button
+              onClick={logout}
+              className="w-full flex items-center justify-center gap-3 text-red-500 bg-red-50 py-4 rounded-2xl font-bold uppercase tracking-widest text-xs hover:bg-red-100 transition-all border border-red-100"
+            >
+              <LogOut size={18} /> Sign Out
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   // ===== JSX =====
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-1 overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
       {toast.visible && (
         <div
-          className={`fixed top-2 right-2 p-2 text-sm rounded-md ${
-            toast.type === "error"
-              ? "bg-red-100 text-red-700"
-              : toast.type === "success"
-              ? "bg-green-100 text-green-700"
-              : "bg-gray-100 text-gray-700"
-          }`}
+          className={`fixed top-4 right-4 px-6 py-3 text-sm font-semibold rounded-xl shadow-2xl z-50 animate-bounce ${toast.type === "error"
+            ? "bg-red-500 text-white"
+            : toast.type === "success"
+              ? "bg-emerald-500 text-white"
+              : "bg-blue-500 text-white"
+            }`}
         >
           {toast.message}
         </div>
       )}
 
-      <div className="w-full max-w-sm bg-white rounded-md shadow-sm p-5">
-        {!isSubmitting ? (
-          <>
-            <Link
-              to="/signup"
-              className="flex items-center text-sm text-gray-600 mb-4"
-            >
-              <ArrowLeft size={14} className="mr-2" /> Back
-            </Link>
+      <div className="w-full max-w-md bg-white rounded-[2.5rem] shadow-2xl shadow-gray-200/50 p-10 border border-gray-100 relative overflow-hidden">
+        <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-[#43C6AC] to-[#2B5876]"></div>
 
-            <div className="text-center mb-6">
-              <div className="mx-auto mb-3 bg-gray-100 w-fit p-2 rounded-full">
-                <User
-                  size={20}
-                  className="text-white bg-[#368F7A] p-1 rounded-full"
-                />
-              </div>
-              <h2 className="text-xl font-semibold text-gray-800">
-                Welcome Back
-              </h2>
-              <p className="text-sm text-gray-600">Login to your account</p>
-            </div>
+        <Link
+          to="/"
+          className="inline-flex items-center text-xs font-bold uppercase tracking-widest text-gray-400 mb-8 hover:text-[#43C6AC] transition-colors gap-2"
+        >
+          <ArrowLeft size={16} /> Back to Library
+        </Link>
 
-            <form className="space-y-3" onSubmit={handleLogin}>
-              <div>
-                <label className="block text-sm text-gray-700 mb-1">
-                  Email
-                </label>
-                <div className="relative">
-                  <Mail className="absolute left-2 inset-y-0 h-5 w-5 m-auto text-white bg-[#368F7A] p-0.5 rounded-full" />
-                  <input
-                    className="w-full pl-9 pr-3 py-2 text-sm border rounded-md focus:ring-1 focus:ring-[#43C6AC] focus:border-[#43C6AC] text-gray-800 placeholder-gray-500"
-                    placeholder="Email"
-                    value={formData.email}
-                    onChange={(e) =>
-                      setFormData({ ...formData, email: e.target.value })
-                    }
-                  />
-                </div>
-              </div>
+        <div className="text-center mb-10">
+          <div className="mx-auto mb-6 bg-[#43C6AC]/10 w-20 h-20 rounded-3xl flex items-center justify-center text-[#368F7A] rotate-3 hover:rotate-0 transition-transform duration-500">
+            <Lock size={32} />
+          </div>
+          <h2 className="text-3xl font-bold text-gray-900 lowercase tracking-tighter">
+            Login.
+          </h2>
+          <p className="text-gray-500 font-medium mt-2">Access your personalized collection</p>
+        </div>
 
-              <div>
-                <label className="block text-sm text-gray-700 mb-1">
-                  Password
-                </label>
-                <div className="relative">
-                  <Lock className="absolute left-2 inset-y-0 h-5 w-5 m-auto text-white bg-[#368F7A] p-0.5 rounded-full" />
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    className="w-full pl-9 pr-9 py-2 text-sm border rounded-md focus:ring-1 focus:ring-[#43C6AC] focus:border-[#43C6AC] text-gray-800 placeholder-gray-500"
-                    placeholder="Password"
-                    value={formData.password}
-                    onChange={(e) =>
-                      setFormData({ ...formData, password: e.target.value })
-                    }
-                  />
-                  <button
-                    type="button"
-                    className="absolute right-2 inset-y-0 m-auto text-gray-400"
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
-                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                  </button>
-                </div>
-              </div>
-
-              <button className="w-full bg-[#43C6AC] text-white py-2 text-sm rounded-md hover:bg-[#368f7a] transition-colors">
-                Login
-              </button>
-            </form>
-
-            <p className="mt-4 text-center text-sm text-gray-600">
-              No account?{" "}
-              <Link to="/signup" className="text-[#43C6AC] hover:underline">
-                Create Account
-              </Link>
-            </p>
-          </>
-        ) : (
-          <div className="text-center space-y-3">
-            <div className="mx-auto mb-3 bg-gray-100 w-fit p-2 rounded-full">
-              <User
-                size={20}
-                className="text-white bg-[#368F7A] p-1 rounded-full"
+        <form className="space-y-6" onSubmit={handleLogin}>
+          <div>
+            <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 px-1">
+              Email Address
+            </label>
+            <div className="relative group">
+              <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#43C6AC] transition-colors" size={20} />
+              <input
+                type="email"
+                className="w-full pl-12 pr-4 py-4 bg-gray-50 border-0 rounded-2xl focus:ring-2 focus:ring-[#43C6AC]/20 outline-none text-gray-800 font-medium placeholder-gray-400 transition-all"
+                placeholder="name@example.com"
+                value={formData.email}
+                onChange={(e) =>
+                  setFormData({ ...formData, email: e.target.value })
+                }
+                required
               />
             </div>
-
-            <h2 className="text-xl font-semibold text-gray-800">
-              Welcome back, {formData.email.split("@")[0] || "User"}
-            </h2>
-
-            <Link
-              to="/"
-              className="w-full inline-block bg-[#43C6AC] text-white py-2 rounded-md hover:bg-[#368f7a] transition-colors"
-            >
-              Go to Home
-            </Link>
-
-            <button
-              onClick={handleSignOut}
-              className="w-full text-gray-600 py-2 rounded-md border hover:bg-gray-50 transition-colors"
-            >
-              Sign Out
-            </button>
           </div>
-        )}
+
+          <div>
+            <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 px-1">
+              Secret Password
+            </label>
+            <div className="relative group">
+              <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#43C6AC] transition-colors" size={20} />
+              <input
+                type={showPassword ? "text" : "password"}
+                className="w-full pl-12 pr-12 py-4 bg-gray-50 border-0 rounded-2xl focus:ring-2 focus:ring-[#43C6AC]/20 outline-none text-gray-800 font-medium placeholder-gray-400 transition-all"
+                placeholder="••••••••"
+                value={formData.password}
+                onChange={(e) =>
+                  setFormData({ ...formData, password: e.target.value })
+                }
+                required
+              />
+              <button
+                type="button"
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#43C6AC] transition-all"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
+            </div>
+            <div className="text-right mt-2">
+              <a href="#" className="text-[10px] font-bold uppercase text-[#43C6AC] hover:underline">Forgot?</a>
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            disabled={toast.type === "loading"}
+            className="w-full bg-gradient-to-r from-[#2B5876] to-[#43C6AC] text-white py-5 rounded-2xl font-bold uppercase tracking-widest text-xs shadow-xl shadow-emerald-100 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50"
+          >
+            {toast.type === "loading" ? "Authenticating..." : "Enter Account"}
+          </button>
+        </form>
+
+        <div className="mt-10 flex items-center gap-4">
+          <div className="flex-1 h-px bg-gray-100"></div>
+          <p className="text-[10px] font-bold text-gray-300 uppercase tracking-widest">or Join our community</p>
+          <div className="flex-1 h-px bg-gray-100"></div>
+        </div>
+
+        <p className="mt-8 text-center text-sm font-medium text-gray-500">
+          New here?{" "}
+          <Link to="/signup" className="text-[#43C6AC] font-bold hover:underline ml-1">
+            Create Profile
+          </Link>
+        </p>
       </div>
     </div>
   );

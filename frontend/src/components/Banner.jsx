@@ -107,9 +107,9 @@ const Banner = () => {
           </div>
           {/* footer texts */}
           <div className="col-span-full text-center text-xs md:text-[12px] text-gray-500 font-medium tracking-wide">
-            Curated Collections <span className="mx-2 font-bold">●</span> Award
-            Winning Authors <span className="mx-2 font-bold">●</span> Critical
-            Analysis <span className="mx-2 font-bold">●</span> Cultural
+            Curated Collections <span className="mx-2 font-medium">●</span> Award
+            Winning Authors <span className="mx-2 font-medium">●</span> Critical
+            Analysis <span className="mx-2 font-medium">●</span> Cultural
             Perspective
           </div>
         </div>
