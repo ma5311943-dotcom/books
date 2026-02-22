@@ -49,7 +49,7 @@ const Login = () => {
     setToast({ visible: true, message: "Logging in...", type: "loading" });
 
     try {
-      const response = await fetch("http://localhost:4000/api/user/login", {
+      const response = await fetch("https://e-commerce-1-ku99.onrender.com/api/user/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

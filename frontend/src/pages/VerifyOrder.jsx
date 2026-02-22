@@ -17,7 +17,7 @@ const VerifyOrder = () => {
 
     const verifyPayment = async () => {
         try {
-            const response = await fetch('http://localhost:4000/api/order/verify', {
+            const response = await fetch('https://e-commerce-1-ku99.onrender.com/api/order/verify', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

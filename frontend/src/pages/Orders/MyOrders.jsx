@@ -76,7 +76,7 @@ const MyOrders = () => {
 
     const fetchOrders = async () => {
         try {
-            const response = await fetch(`http://localhost:4000/api/order/user/${user._id}`, {
+            const response = await fetch(`https://e-commerce-1-ku99.onrender.com/api/order/user/${user._id}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const data = await response.json();
@@ -93,7 +93,7 @@ const MyOrders = () => {
     const handleRatingSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch(`http://localhost:4000/api/order/rate`, {
+            const response = await fetch(`https://e-commerce-1-ku99.onrender.com/api/order/rate`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -207,7 +207,7 @@ const MyOrders = () => {
                                                 <div key={idx} className="flex gap-4 items-center">
                                                     <div className="h-14 w-10 bg-gray-50 rounded-lg flex-shrink-0 overflow-hidden border border-gray-100 shadow-sm">
                                                         <img
-                                                            src={`http://localhost:4000/uploads/${item.image}`}
+                                                            src={`https://e-commerce-1-ku99.onrender.com/uploads/${item.image}`}
                                                             alt={item.title}
                                                             className="h-full w-full object-cover"
                                                         />

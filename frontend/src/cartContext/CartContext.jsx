@@ -23,7 +23,7 @@ const cartReducer = (state, action) => {
 export const CartProvider = ({ children }) => {
   const [state, dispatch] = useReducer(cartReducer, { items: [] });
   const { user, token } = useAuth();
-  const backendUrl = "http://localhost:4000/api/cart";
+  const backendUrl = "https://e-commerce-1-ku99.onrender.com/api/cart";
 
   // Fetch cart from backend on login
   useEffect(() => {

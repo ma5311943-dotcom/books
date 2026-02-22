@@ -43,7 +43,7 @@ const AddBooks = () => {
         data.append('image', image);
 
         try {
-            const response = await fetch('http://localhost:4000/api/book', {
+            const response = await fetch('https://e-commerce-1-ku99.onrender.com/api/book', {
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${token}` },
                 body: data

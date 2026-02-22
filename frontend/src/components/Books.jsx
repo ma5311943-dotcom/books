@@ -15,7 +15,7 @@ const Books = () => {
 
     const fetchBooks = async () => {
         try {
-            const response = await fetch('http://localhost:4000/api/book');
+            const response = await fetch('https://e-commerce-1-ku99.onrender.com/api/book');
             const data = await response.json();
             if (data.success) {
                 setBooks(data.books);
@@ -104,7 +104,7 @@ const Books = () => {
                         <div key={b._id} className="group bg-white rounded-[2rem] p-5 shadow-sm border border-gray-50 hover:shadow-2xl hover:border-emerald-100 transition-all duration-500 flex flex-col h-full">
                             <div className="relative aspect-[3/4] mb-6 overflow-hidden rounded-2xl shadow-sm group-hover:shadow-xl transition-all duration-500">
                                 <img
-                                    src={`http://localhost:4000/uploads/${b.image}`}
+                                    src={`https://e-commerce-1-ku99.onrender.com/uploads/${b.image}`}
                                     alt={b.title}
                                     className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
                                 />

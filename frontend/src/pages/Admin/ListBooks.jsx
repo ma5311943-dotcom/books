@@ -12,7 +12,7 @@ const ListBooks = () => {
 
     const fetchBooks = async () => {
         try {
-            const response = await fetch('http://localhost:4000/api/book');
+            const response = await fetch('https://e-commerce-1-ku99.onrender.com/api/book');
             const data = await response.json();
             if (data.success) {
                 setBooks(data.books);
@@ -31,7 +31,7 @@ const ListBooks = () => {
     const handleDelete = async (id) => {
         if (!window.confirm("Are you sure you want to delete this book?")) return;
         try {
-            const response = await fetch(`http://localhost:4000/api/book/${id}`, {
+            const response = await fetch(`https://e-commerce-1-ku99.onrender.com/api/book/${id}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -115,7 +115,7 @@ const ListBooks = () => {
                                         <div className="flex items-center gap-4">
                                             <div className="h-14 w-10 flex-shrink-0 bg-gray-100 rounded-lg overflow-hidden border border-gray-200 shadow-sm">
                                                 <img
-                                                    src={`http://localhost:4000/uploads/${book.image}`}
+                                                    src={`https://e-commerce-1-ku99.onrender.com/uploads/${book.image}`}
                                                     alt={book.title}
                                                     className="h-full w-full object-cover"
                                                 />

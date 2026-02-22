@@ -37,10 +37,10 @@ const AdminDashboard = () => {
         const fetchDashboardData = async () => {
             try {
                 const [statsRes, ordersRes] = await Promise.all([
-                    fetch('http://localhost:4000/api/dashboard/stats', {
+                    fetch('https://e-commerce-1-ku99.onrender.com/api/dashboard/stats', {
                         headers: { 'Authorization': `Bearer ${token}` }
                     }),
-                    fetch('http://localhost:4000/api/dashboard/latest-orders', {
+                    fetch('https://e-commerce-1-ku99.onrender.com/api/dashboard/latest-orders', {
                         headers: { 'Authorization': `Bearer ${token}` }
                     })
                 ]);

@@ -19,7 +19,7 @@ const OurBestSellers = () => {
 
   const fetchBooks = async () => {
     try {
-      const response = await fetch('http://localhost:4000/api/book');
+      const response = await fetch('https://e-commerce-1-ku99.onrender.com/api/book');
       const data = await response.json();
       if (data.success) {
         // Show top 6 as best sellers
@@ -142,7 +142,7 @@ const OurBestSellers = () => {
                   </div>
                 </div>
                 <img
-                  src={`http://localhost:4000/uploads/${book.image}`}
+                  src={`https://e-commerce-1-ku99.onrender.com/uploads/${book.image}`}
                   className={styles.bookImage}
                   alt={book.title}
                 />

@@ -70,7 +70,7 @@ const SignUp = () => {
     });
 
     try {
-      const response = await fetch("http://localhost:4000/api/user/register", {
+      const response = await fetch("https://e-commerce-1-ku99.onrender.com/api/user/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

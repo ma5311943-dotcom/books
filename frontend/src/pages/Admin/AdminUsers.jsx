@@ -11,7 +11,7 @@ const AdminUsers = () => {
 
     const fetchUsers = async () => {
         try {
-            const response = await fetch('http://localhost:4000/api/user/list', {
+            const response = await fetch('https://e-commerce-1-ku99.onrender.com/api/user/list', {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const data = await response.json();
@@ -32,7 +32,7 @@ const AdminUsers = () => {
     const handleDeleteUser = async (userId) => {
         if (!window.confirm("Are you sure you want to delete this user? This action cannot be undone.")) return;
         try {
-            const response = await fetch(`http://localhost:4000/api/user/${userId}`, {
+            const response = await fetch(`https://e-commerce-1-ku99.onrender.com/api/user/${userId}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });

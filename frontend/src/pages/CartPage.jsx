@@ -70,7 +70,7 @@ const CartPage = () => {
                 <div key={item.bookId._id || item.bookId} className="bg-white rounded-[2rem] p-6 shadow-sm border border-gray-50 flex flex-col md:flex-row gap-8 hover:shadow-xl hover:border-emerald-100 transition-all duration-500 group">
                   <div className="w-full md:w-32 h-44 bg-gray-50 rounded-2xl overflow-hidden border border-gray-100 shadow-sm flex-shrink-0">
                     <img
-                      src={item.bookId.image ? `http://localhost:4000/uploads/${item.bookId.image}` : `http://localhost:4000/uploads/${item.image}`}
+                      src={item.bookId.image ? `https://e-commerce-1-ku99.onrender.com/uploads/${item.bookId.image}` : `https://e-commerce-1-ku99.onrender.com/uploads/${item.image}`}
                       alt={item.bookId.title || item.title}
                       className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
                     />
