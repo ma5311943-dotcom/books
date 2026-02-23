@@ -6,6 +6,7 @@ import { ShoppingCart, ArrowRight, Truck, ShieldCheck, Tag, Trash2, Plus, Minus,
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { useNavigate, Link } from 'react-router-dom';
+import { BACKEND_URL } from '../assets/config';
 
 const CartPage = () => {
   const { cart, updateQuantity, removeFromCart } = useCart();
@@ -70,7 +71,7 @@ const CartPage = () => {
                 <div key={item.bookId._id || item.bookId} className="bg-white rounded-[2rem] p-6 shadow-sm border border-gray-50 flex flex-col md:flex-row gap-8 hover:shadow-xl hover:border-emerald-100 transition-all duration-500 group">
                   <div className="w-full md:w-32 h-44 bg-gray-50 rounded-2xl overflow-hidden border border-gray-100 shadow-sm flex-shrink-0">
                     <img
-                      src={item.bookId.image ? `https://e-commerce-1-ku99.onrender.com/uploads/${item.bookId.image}` : `https://e-commerce-1-ku99.onrender.com/uploads/${item.image}`}
+                      src={item.bookId.image.startsWith('http') ? item.bookId.image : `${BACKEND_URL}/uploads/${item.bookId.image}`}
                       alt={item.bookId.title || item.title}
                       className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
                     />
@@ -121,7 +122,6 @@ const CartPage = () => {
                 </div>
               ))}
             </div>
-
             {/* Order Summary Sidebar */}
             <div className="lg:col-span-1">
               <div className="bg-white rounded-[3rem] p-8 shadow-sm border border-gray-100 sticky top-32">
@@ -145,7 +145,6 @@ const CartPage = () => {
                     <span className="text-3xl font-bold text-[#43C6AC]">${total.toFixed(2)}</span>
                   </div>
                 </div>
-
                 <div className="bg-emerald-50 p-4 rounded-2xl mb-8 flex items-center gap-4 border border-emerald-100">
                   <div className="bg-white p-2 rounded-xl shadow-sm"><Tag size={20} className="text-emerald-500" /></div>
                   <div>
@@ -153,7 +152,6 @@ const CartPage = () => {
                     <p className="text-[10px] text-emerald-600 font-medium">Orders over $1000 qualify</p>
                   </div>
                 </div>
-
                 <button
                   onClick={() => navigate('/checkout')}
                   className="w-full py-3 bg-gradient-to-r from-[#2B5876] to-[#43C6AC] text-white text-sm rounded-2xl font-bold uppercase tracking-widest shadow-xl shadow-emerald-100 hover:scale-[1.02] transition-all flex items-center justify-center gap-3 group"

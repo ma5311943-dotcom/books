@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useCart } from '../../cartContext/CartContext';
 import { useAuth } from '../../context/AuthContext';
 import { MapPin, Phone, Mail, User, CreditCard, Truck, CheckCircle } from 'lucide-react';
+import { BACKEND_URL } from '../../assets/config';
 
 const Checkout = () => {
     const { cart, clearCart } = useCart();
@@ -52,7 +53,7 @@ const Checkout = () => {
         console.log("Order Payload:", JSON.stringify(orderData, null, 2));
 
         try {
-            const response = await fetch('https://e-commerce-1-ku99.onrender.com/api/order/place', {
+            const response = await fetch(`${BACKEND_URL}/api/order/place`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

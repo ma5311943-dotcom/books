@@ -3,6 +3,7 @@ import { Search, ShoppingCart, Star, ShoppingBag, Plus, Minus, Loader2 } from 'l
 import { useCart } from '../cartContext/CartContext';
 import { useSearchParams } from 'react-router-dom';
 import { booksPageStyles as s } from '../assets/dummystyles';
+import { BACKEND_URL } from '../assets/config';
 
 const Books = () => {
     const { addToCart } = useCart();
@@ -15,7 +16,7 @@ const Books = () => {
 
     const fetchBooks = async () => {
         try {
-            const response = await fetch('https://e-commerce-1-ku99.onrender.com/api/book');
+            const response = await fetch(`${BACKEND_URL}/api/book`);
             const data = await response.json();
             if (data.success) {
                 setBooks(data.books);
@@ -104,7 +105,7 @@ const Books = () => {
                         <div key={b._id} className="group bg-white rounded-[2rem] p-5 shadow-sm border border-gray-50 hover:shadow-2xl hover:border-emerald-100 transition-all duration-500 flex flex-col h-full">
                             <div className="relative aspect-[3/4] mb-6 overflow-hidden rounded-2xl shadow-sm group-hover:shadow-xl transition-all duration-500">
                                 <img
-                                    src={`https://e-commerce-1-ku99.onrender.com/uploads/${b.image}`}
+                                    src={b.image.startsWith('http') ? b.image : `${BACKEND_URL}/uploads/${b.image}`}
                                     alt={b.title}
                                     className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
                                 />

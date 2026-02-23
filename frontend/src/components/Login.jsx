@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Mail, Lock, Eye, EyeOff, ArrowLeft, User, LayoutDashboard, LogOut } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
+import { BACKEND_URL } from "../assets/config";
 
 // ===== Component =====
 const Login = () => {
@@ -49,7 +50,7 @@ const Login = () => {
     setToast({ visible: true, message: "Logging in...", type: "loading" });
 
     try {
-      const response = await fetch("https://e-commerce-1-ku99.onrender.com/api/user/login", {
+      const response = await fetch(`${BACKEND_URL}/api/user/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -40,7 +40,7 @@ const Banner = () => {
     }
   };
   return (
-    <div className={container}>
+    <div className={container + " mt-10"}>
       <div className={glassBox}>
         <div className={geometricOverlay}>
           <div className="absolute -top-10 -right-10  md:-top-20  md:-right-20 w-48 h-48 md:w-96 md:h-96 bg-[#f8ffae] rounded-full blur-xl md:blur-3xl" />

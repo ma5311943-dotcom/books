@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { User, Mail, Lock, Eye, EyeOff, ArrowLeft, ShieldCheck, Stars } from "lucide-react";
+import { BACKEND_URL } from "../assets/config";
 
 // ===== Component =====
 const SignUp = () => {
@@ -70,7 +71,7 @@ const SignUp = () => {
     });
 
     try {
-      const response = await fetch("https://e-commerce-1-ku99.onrender.com/api/user/register", {
+      const response = await fetch(`${BACKEND_URL}/api/user/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

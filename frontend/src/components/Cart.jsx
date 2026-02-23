@@ -3,13 +3,16 @@ import { styles } from "../assets/dummystyles"
 import { useCart } from '../cartContext/CartContext'
 import { ShoppingBag, Trash2, Plus, Minus, BookSearch, Book } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import { BACKEND_URL } from '../assets/config'
 
 const Cart = () => {
   const { cart, dispatch } = useCart()
   const total = cart.items.reduce((sum, item) => sum + Number(item.price) * item.quantity, 0)
 
   const getImageSource = (item) => {
-    return item.image?.default || item.image
+    const img = item.bookId?.image || item.image;
+    if (!img) return "";
+    return img.startsWith('http') ? img : `${BACKEND_URL}/uploads/${img}`;
   }
 
   const incr = (item) => {

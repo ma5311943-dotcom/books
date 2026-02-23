@@ -5,6 +5,7 @@ import { useCart } from '../cartContext/CartContext';
 import { CheckCircle, XCircle, Loader2, ArrowRight, ShoppingBag } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import { BACKEND_URL } from '../assets/config';
 
 const VerifyOrder = () => {
     const [searchParams] = useSearchParams();
@@ -17,7 +18,7 @@ const VerifyOrder = () => {
 
     const verifyPayment = async () => {
         try {
-            const response = await fetch('https://e-commerce-1-ku99.onrender.com/api/order/verify', {
+            const response = await fetch(`${BACKEND_URL}/api/order/verify`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

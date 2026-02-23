@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { styles } from '../../assets/Admin/dummyStyles';
 import { Upload, Star, PlusCircle, CheckCircle } from 'lucide-react';
+import { BACKEND_URL } from '../../assets/config';
 
 const AddBooks = () => {
     const { token } = useAuth();
@@ -43,7 +44,7 @@ const AddBooks = () => {
         data.append('image', image);
 
         try {
-            const response = await fetch('https://e-commerce-1-ku99.onrender.com/api/book', {
+            const response = await fetch(`${BACKEND_URL}/api/book`, {
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${token}` },
                 body: data

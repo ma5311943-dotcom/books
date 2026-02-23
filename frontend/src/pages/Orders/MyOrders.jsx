@@ -4,6 +4,7 @@ import { Package, Truck, CheckCircle, Clock, XCircle, MapPin, Calendar, Info, Sh
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 import { Link } from 'react-router-dom';
+import { BACKEND_URL } from '../../assets/config';
 
 const Countdown = ({ startedAt, hours }) => {
     const [timeLeft, setTimeLeft] = useState("");
@@ -76,7 +77,7 @@ const MyOrders = () => {
 
     const fetchOrders = async () => {
         try {
-            const response = await fetch(`https://e-commerce-1-ku99.onrender.com/api/order/user/${user._id}`, {
+            const response = await fetch(`${BACKEND_URL}/api/order/user/${user._id}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const data = await response.json();
@@ -93,7 +94,7 @@ const MyOrders = () => {
     const handleRatingSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch(`https://e-commerce-1-ku99.onrender.com/api/order/rate`, {
+            const response = await fetch(`${BACKEND_URL}/api/order/rate`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -207,7 +208,7 @@ const MyOrders = () => {
                                                 <div key={idx} className="flex gap-4 items-center">
                                                     <div className="h-14 w-10 bg-gray-50 rounded-lg flex-shrink-0 overflow-hidden border border-gray-100 shadow-sm">
                                                         <img
-                                                            src={`https://e-commerce-1-ku99.onrender.com/uploads/${item.image}`}
+                                                            src={`${BACKEND_URL}/uploads/${item.image}`}
                                                             alt={item.title}
                                                             className="h-full w-full object-cover"
                                                         />

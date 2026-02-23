@@ -10,6 +10,7 @@ import {
   StarIcon,
   Loader2,
 } from "lucide-react";
+import { BACKEND_URL } from "../assets/config";
 
 const HomeBooks = () => {
   const { cart, addToCart, updateQuantity } = useCart();
@@ -18,7 +19,7 @@ const HomeBooks = () => {
 
   const fetchBooks = async () => {
     try {
-      const response = await fetch('https://e-commerce-1-ku99.onrender.com/api/book');
+      const response = await fetch(`${BACKEND_URL}/api/book`);
       const data = await response.json();
       if (data.success) {
         // Take first 4 for the home favorites section
@@ -59,7 +60,7 @@ const HomeBooks = () => {
               return (
                 <div key={book._id} className={styles.bookCard}>
                   <div className={styles.imageWrapper}>
-                    <img src={`https://e-commerce-1-ku99.onrender.com/uploads/${book.image}`} className={styles.image} alt={book.title} />
+                    <img src={book.image.startsWith('http') ? book.image : `${BACKEND_URL}/uploads/${book.image}`} className={styles.image} alt={book.title} />
                     <div className={styles.rating}>
                       {[...Array(5)].map((_, i) => (
                         <StarIcon

@@ -13,6 +13,7 @@ import {
     Truck,
     Star
 } from 'lucide-react';
+import { BACKEND_URL } from '../../assets/config';
 
 const AdminOrders = () => {
     const { token } = useAuth();
@@ -33,7 +34,7 @@ const AdminOrders = () => {
 
     const fetchOrders = async () => {
         try {
-            const response = await fetch('https://e-commerce-1-ku99.onrender.com/api/order/list', {
+            const response = await fetch(`${BACKEND_URL}/api/order/list`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const data = await response.json();
@@ -58,7 +59,7 @@ const AdminOrders = () => {
                 body.estimatedDeliveryTime = deliveryTime;
             }
 
-            const response = await fetch('https://e-commerce-1-ku99.onrender.com/api/order/status', {
+            const response = await fetch(`${BACKEND_URL}/api/order/status`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -240,7 +241,7 @@ const AdminOrders = () => {
                                         <div key={idx} className="flex gap-4 p-3 rounded-xl hover:bg-gray-50 transition-colors border border-transparent hover:border-gray-100">
                                             <div className="h-16 w-12 bg-gray-100 rounded-lg flex-shrink-0 overflow-hidden shadow-sm">
                                                 <img
-                                                    src={`https://e-commerce-1-ku99.onrender.com/uploads/${item.image}`}
+                                                    src={`${BACKEND_URL}/uploads/${item.image}`}
                                                     alt={item.title}
                                                     className="h-full w-full object-cover"
                                                 />

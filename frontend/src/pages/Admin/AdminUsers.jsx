@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { styles } from '../../assets/Admin/dummyStyles';
 import { Users, Trash2, Mail, Shield, User, Search, UserMinus } from 'lucide-react';
+import { BACKEND_URL } from '../../assets/config';
 
 const AdminUsers = () => {
     const { token } = useAuth();
@@ -11,7 +12,7 @@ const AdminUsers = () => {
 
     const fetchUsers = async () => {
         try {
-            const response = await fetch('https://e-commerce-1-ku99.onrender.com/api/user/list', {
+            const response = await fetch(`${BACKEND_URL}/api/user/list`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const data = await response.json();
@@ -32,7 +33,7 @@ const AdminUsers = () => {
     const handleDeleteUser = async (userId) => {
         if (!window.confirm("Are you sure you want to delete this user? This action cannot be undone.")) return;
         try {
-            const response = await fetch(`https://e-commerce-1-ku99.onrender.com/api/user/${userId}`, {
+            const response = await fetch(`${BACKEND_URL}/api/user/${userId}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });

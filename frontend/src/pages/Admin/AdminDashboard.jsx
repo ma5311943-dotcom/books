@@ -9,6 +9,7 @@ import {
     ChevronRight,
     Package
 } from 'lucide-react';
+import { BACKEND_URL } from '../../assets/config';
 import {
     BarChart,
     Bar,
@@ -37,10 +38,10 @@ const AdminDashboard = () => {
         const fetchDashboardData = async () => {
             try {
                 const [statsRes, ordersRes] = await Promise.all([
-                    fetch('https://e-commerce-1-ku99.onrender.com/api/dashboard/stats', {
+                    fetch(`${BACKEND_URL}/api/dashboard/stats`, {
                         headers: { 'Authorization': `Bearer ${token}` }
                     }),
-                    fetch('https://e-commerce-1-ku99.onrender.com/api/dashboard/latest-orders', {
+                    fetch(`${BACKEND_URL}/api/dashboard/latest-orders`, {
                         headers: { 'Authorization': `Bearer ${token}` }
                     })
                 ]);

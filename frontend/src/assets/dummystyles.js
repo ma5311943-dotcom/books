@@ -78,9 +78,9 @@ export const navbarStyles = {
 
 //banner
 export const container =
-  "min-h-screen flex items-center justify-center px-4 pt-20 md:pt-24 pb-10 relative bg-gradient-to-br from-[#43C6AC]/90 to-[#2B5876]/90";
+  "min-h-screen flex items-center justify-center px-1 pt-20 md:pt-24 pb-10 relative bg-gradient-to-br from-[#43C6AC]/90 to-[#2B5876]/90";
 export const glassBox =
-  "backdrop-blur-2xl bg-white/95 rounded-lg md:rounded-xl shadow-lg max-w-5xl w-full mx-4 p-2.5 md:p-3.5 lg:p-4.5 relative overflow-hidden";
+  "backdrop-blur-2xl bg-white/95 rounded-lg md:rounded-xl shadow-lg max-w-5xl w-full mx-2 md:mx-4 p-2.5 md:p-3.5 lg:p-4.5 relative overflow-hidden";
 export const geometricOverlay =
   "absolute inset-0 opacity-10 pointer-events-none";
 export const headerText =
@@ -118,7 +118,7 @@ export const overlayEffect =
 
 export const ourBestSellersStyles = {
   section: "py-8 md:py-16 bg-gray-50",
-  container: "container mx-auto px-4 sm:px-8 md:px-12 lg:px-20",
+  container: "container mx-auto px-4 md:px-8 lg:px-12",
   headerWrapper: "flex flex-col md:flex-row justify-between items-center md:items-center mb-6 md:mb-12 gap-4 md:gap-8 text-center md:text-left",
   headerText: "space-y-0.5 md:space-y-2 w-full md:w-auto",
   title: "text-2xl md:text-4xl font-semibold text-gray-900",
@@ -167,8 +167,8 @@ export const ourBestSellersStyles = {
 
 export const homeBooksStyles = {
   section: "py-20 bg-gradient-to-br from-[#43C6AC] to-[#F8FFAE] relative",
-  container: "container mx-auto px-4 md:px-6",
-  card: "bg-white rounded-2xl shadow-lg p-8 md:p-12",
+  container: "container mx-auto px-2 md:px-6",
+  card: "bg-white rounded-2xl shadow-lg p-4 md:p-12",
   heading: "text-3xl md:text-4xl font-semibold bg-gradient-to-r from-[#43C6AC] to-[#2B5876] bg-clip-text text-transparent mb-4",
   headingLine: "h-1 w-20 bg-gradient-to-r from-[#43C6AC] to-[#F8FFAE] rounded-full mx-auto",
   grid: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8",
@@ -199,7 +199,7 @@ export const homeAboutStyles = {
   wrapper: "py-20 bg-white relative overflow-hidden",
   bgBlur1: "absolute top-1/4 right-1/4 w-96 h-96 rounded-full bg-[#43C6AC]/20 blur-[100px]",
   bgBlur2: "absolute bottom-1/4 left-1/4 w-96 h-96 rounded-full bg-[#F8FFAE]/20 blur-[100px]",
-  container: "container mx-auto px-4 md:px-6 relative z-10",
+  container: "container mx-auto px-2 md:px-6 relative z-10",
   aboutGrid: "grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-20",
   imageWrapper: "relative group",
   imageGlow: "absolute -inset-4 bg-gradient-to-r from-[#43C6AC] to-[#F8FFAE] rounded-2xl blur opacity-0 group-hover:opacity-20 transition-opacity duration-500",
@@ -239,7 +239,7 @@ export const homeAboutStyles = {
 
 export const footerStyles = {
   footer: "bg-gray-100 border-t border-[#43C6AC]/20 pt-16 pb-8 relative",
-  container: "container mx-auto px-4 md:px-6",
+  container: "container mx-auto px-2 md:px-6",
   grid: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12",
   logoBlock: "space-y-4",
   logoLink: "inline-flex items-center gap-2",

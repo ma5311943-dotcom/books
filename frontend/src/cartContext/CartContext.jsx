@@ -1,6 +1,7 @@
 // ===== Imports =====
 import { createContext, useContext, useEffect, useReducer } from "react";
 import { useAuth } from "../context/AuthContext";
+import { BACKEND_URL } from "../assets/config";
 
 // ===== Context =====
 const CartContext = createContext();
@@ -23,7 +24,7 @@ const cartReducer = (state, action) => {
 export const CartProvider = ({ children }) => {
   const [state, dispatch] = useReducer(cartReducer, { items: [] });
   const { user, token } = useAuth();
-  const backendUrl = "https://e-commerce-1-ku99.onrender.com/api/cart";
+  const backendUrl = `${BACKEND_URL}/api/cart`;
 
   // Fetch cart from backend on login
   useEffect(() => {

@@ -10,6 +10,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { useCart } from "../cartContext/CartContext";
+import { BACKEND_URL } from "../assets/config";
 
 const OurBestSellers = () => {
   const scrollRef = useRef(null);
@@ -19,7 +20,7 @@ const OurBestSellers = () => {
 
   const fetchBooks = async () => {
     try {
-      const response = await fetch('https://e-commerce-1-ku99.onrender.com/api/book');
+      const response = await fetch(`${BACKEND_URL}/api/book`);
       const data = await response.json();
       if (data.success) {
         // Show top 6 as best sellers
@@ -142,7 +143,7 @@ const OurBestSellers = () => {
                   </div>
                 </div>
                 <img
-                  src={`https://e-commerce-1-ku99.onrender.com/uploads/${book.image}`}
+                  src={book.image.startsWith('http') ? book.image : `${BACKEND_URL}/uploads/${book.image}`}
                   className={styles.bookImage}
                   alt={book.title}
                 />

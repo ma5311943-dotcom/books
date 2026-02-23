@@ -28,6 +28,8 @@ const Footer = () => {
                 <a
                   key={i}
                   href={url}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="w-10 h-10 rounded-xl bg-gray-800 flex items-center justify-center text-gray-400 hover:text-white hover:bg-[#43C6AC] transition-all duration-300"
                 >
                   <Icon size={18} />

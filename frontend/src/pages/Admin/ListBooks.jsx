@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { styles } from '../../assets/Admin/dummyStyles';
 import { Trash2, Edit, Search, Filter, BookOpen } from 'lucide-react';
+import { BACKEND_URL } from '../../assets/config';
 
 const ListBooks = () => {
     const { token } = useAuth();
@@ -12,7 +13,7 @@ const ListBooks = () => {
 
     const fetchBooks = async () => {
         try {
-            const response = await fetch('https://e-commerce-1-ku99.onrender.com/api/book');
+            const response = await fetch(`${BACKEND_URL}/api/book`);
             const data = await response.json();
             if (data.success) {
                 setBooks(data.books);
@@ -31,7 +32,7 @@ const ListBooks = () => {
     const handleDelete = async (id) => {
         if (!window.confirm("Are you sure you want to delete this book?")) return;
         try {
-            const response = await fetch(`https://e-commerce-1-ku99.onrender.com/api/book/${id}`, {
+            const response = await fetch(`${BACKEND_URL}/api/book/${id}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -115,7 +116,7 @@ const ListBooks = () => {
                                         <div className="flex items-center gap-4">
                                             <div className="h-14 w-10 flex-shrink-0 bg-gray-100 rounded-lg overflow-hidden border border-gray-200 shadow-sm">
                                                 <img
-                                                    src={`https://e-commerce-1-ku99.onrender.com/uploads/${book.image}`}
+                                                    src={book.image.startsWith('http') ? book.image : `${BACKEND_URL}/uploads/${book.image}`}
                                                     alt={book.title}
                                                     className="h-full w-full object-cover"
                                                 />
