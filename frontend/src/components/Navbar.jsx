@@ -5,7 +5,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import logo from "../assets/logoicon.png";
 import { navItems } from "../assets/dummydata";
 import { FaOpencart } from "react-icons/fa";
-import { MenuIcon, User, X, LogOut, Settings, Package, LayoutDashboard } from "lucide-react";
+import { MenuIcon, User, X, LogOut, Settings, Package, LayoutDashboard, ChevronRight } from "lucide-react";
 import { useCart } from "../cartContext/CartContext";
 import { useAuth } from "../context/AuthContext";
 
@@ -29,6 +29,16 @@ const Navbar = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  // ===== Lock body scroll when mobile menu is open =====
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [isOpen]);
 
   const handleLogout = () => {
     logout();
@@ -153,27 +163,27 @@ const Navbar = () => {
 
         {/* Mobile Menu */}
         {isOpen && (
-          <div className="lg:hidden fixed inset-0 top-[88px] bg-white/95 backdrop-blur-xl z-40 p-6 animate-in slide-in-from-right duration-500">
-            <div className="flex flex-col gap-4">
+          <div className="lg:hidden fixed inset-0 top-[88px] bg-white/95 backdrop-blur-xl z-40 p-5 overflow-y-auto animate-in slide-in-from-right duration-500">
+            <div className="flex flex-col gap-2.5">
               {navItems.map((item) => (
                 <Link
                   key={item.name}
                   to={item.path}
                   onClick={() => setIsOpen(false)}
-                  className="flex items-center justify-between p-5 bg-gray-50 rounded-2xl border border-gray-100"
+                  className="flex items-center justify-between px-4 py-3 bg-gray-50 rounded-xl border border-gray-100"
                 >
-                  <span className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-900">{item.name}</span>
-                  <ChevronRight size={18} className="text-[#43C6AC]" />
+                  <span className="text-xs font-semibold uppercase tracking-[0.2em] text-gray-900">{item.name}</span>
+                  <ChevronRight size={15} className="text-[#43C6AC]" />
                 </Link>
               ))}
               {user?.role === 'admin' && (
                 <Link
                   to="/admin/dashboard"
                   onClick={() => setIsOpen(false)}
-                  className="flex items-center justify-between p-5 bg-indigo-50 rounded-2xl border border-indigo-100"
+                  className="flex items-center justify-between px-4 py-3 bg-indigo-50 rounded-xl border border-indigo-100"
                 >
-                  <span className="text-sm font-semibold uppercase tracking-[0.2em] text-indigo-700">Admin Dashboard</span>
-                  <LayoutDashboard size={18} className="text-indigo-700" />
+                  <span className="text-xs font-semibold uppercase tracking-[0.2em] text-indigo-700">Admin Dashboard</span>
+                  <LayoutDashboard size={15} className="text-indigo-700" />
                 </Link>
               )}
             </div>
